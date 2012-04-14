@@ -11,12 +11,12 @@
 <ul>
    <li><?php
       echo $this->Form->Label('Title', 'Plugin.MassMail.Title');
-	  echo $this->Form->TextBox('Plugin.Example.Title');
+	  echo $this->Form->Textbox('Plugin.MassMail.Title');
       
    ?></li>
    <li><?php
-      echo $this->Form->Label('Content', 'Plugin.Example.Content');
-      echo $this->Form->Textbox('Plugin.Example.Content');
+      echo $this->Form->Label('Content', 'Plugin.MassMail.Content');
+      echo $this->Form->Textbox('Plugin.MassMail.Content');
    ?></li>
 </ul>
 <?php

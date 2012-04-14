@@ -36,28 +36,40 @@ class MassMailPlugin extends Gdn_Plugin {
    }
 
 
-	public function Controller_Index($Sender) {
+	   public function Controller_Index($Sender) {
 	      // Prevent non-admins from accessing this page
 	      $Sender->Permission('Vanilla.Settings.Manage');
 
 	      $Sender->SetData('PluginDescription',$this->GetPluginKey('Description'));
-	
-		 // Set the model on the form.
-		
-		$Validation = new Gdn_Validation();
-		      $ConfigurationModel = new Gdn_ConfigurationModel($Validation);
-		      $Sender->Form->SetModel($ConfigurationModel);
-			 $Saved = $Sender->Form->Save();
-			         if ($Saved) {
-			            $Sender->StatusMessage = T("Your changes have been saved.");
-			         }
-			      
 
-			      // GetView() looks for files inside plugins/PluginFolderName/views/ and returns their full path. Useful!
-			      $Sender->Render($this->GetView('mail.php'));
-			   }
-			
-	public function OnDisable() {
-	}
+	$Validation = new Gdn_Validation();
+	      $ConfigurationModel = new Gdn_ConfigurationModel($Validation);
+	      $ConfigurationModel->SetField(array(
+	         'Plugin.MassMail.Title' => 'test',
+	         'Plugin.MassMail.Content' => 'test1',
+	      ));
+
+	      // Set the model on the form.
+	      $Sender->Form->SetModel($ConfigurationModel);
+
+	      // If seeing the form for the first time...
+	      if ($Sender->Form->AuthenticatedPostBack() === FALSE) {
+	         // Apply the config settings to the form.
+	         $Sender->Form->SetData($ConfigurationModel->Data);
+	} else {
+	         $ConfigurationModel->Validation->ApplyRule('Plugin.MassMail.Title', 'Required');
+
+	         $ConfigurationModel->Validation->ApplyRule('Plugin.MassMail.Content', 'Required');
+
+	         $Saved = $Sender->Form->Save();
+	         if ($Saved) {
+	            $Sender->StatusMessage = T("Your changes have been saved.");
+	         }
+	      }
+
+	      // GetView() looks for files inside plugins/PluginFolderName/views/ and returns their full path. Useful!
+	      $Sender->Render($this->GetView('mail.php'));
+	   }
+
 }
 
